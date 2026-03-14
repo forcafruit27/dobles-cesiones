@@ -149,44 +149,41 @@
 </head>
 <body>
 
-<!-- PROTECCIÓN: Solo accesible con token válido desde Stripe -->
-<div id="accessDenied" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b);z-index:99999;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif">
-  <div style="text-align:center;color:#e2e8f0;padding:40px">
-    <div style="font-size:60px;margin-bottom:20px">🔒</div>
-    <h1 style="font-size:28px;margin-bottom:12px;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Acceso Denegado</h1>
-    <p style="color:#94a3b8;font-size:15px;margin-bottom:30px;line-height:1.6">No tienes acceso a esta aplicación.<br>Necesitas realizar el pago para acceder.</p>
-    <a href="index.html" style="display:inline-block;background:linear-gradient(90deg,#60a5fa,#a78bfa);color:#0f172a;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px">Ir a la página de compra</a>
+<!-- PANTALLA DE CONTRASEÑA -->
+<div id="passwordScreen" style="position:fixed;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif">
+  <div style="text-align:center;padding:40px;max-width:400px;width:100%">
+    <div style="font-size:50px;margin-bottom:16px">🔐</div>
+    <h1 style="font-size:24px;margin-bottom:8px;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Dobles Cesiones</h1>
+    <p style="color:#94a3b8;font-size:14px;margin-bottom:28px">Introduce tu contraseña de acceso</p>
+    <input type="password" id="pwdInput" placeholder="Contraseña" style="width:100%;padding:14px 18px;border-radius:8px;border:2px solid #334155;background:rgba(255,255,255,.07);color:#e2e8f0;font-size:16px;text-align:center;outline:none;margin-bottom:12px;font-family:'DM Sans',sans-serif" onkeydown="if(event.key==='Enter')checkPwd()">
+    <div id="pwdError" style="color:#f87171;font-size:13px;margin-bottom:12px;display:none">Contraseña incorrecta</div>
+    <button onclick="checkPwd()" style="width:100%;padding:14px;background:linear-gradient(90deg,#60a5fa,#a78bfa);color:#0f172a;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">Entrar</button>
+    <p style="color:rgba(255,255,255,.25);font-size:11px;margin-top:20px">🔒 Acceso exclusivo para suscriptores</p>
   </div>
 </div>
 
 <script>
 (function(){
-  var SECRET_TOKEN = 'jgs_cesiones_2026_rT5nK8wM3xQ7';
-  var params = new URLSearchParams(window.location.search);
-  var token = params.get('token');
-  
-  if(token === SECRET_TOKEN){
-    sessionStorage.setItem('jgs_cesiones_access', 'granted');
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-  
-  if(sessionStorage.getItem('jgs_cesiones_access') !== 'granted'){
+  var PASSWORD = 'jgs2026';
+  if(sessionStorage.getItem('jgs_cesiones_ok') === 'granted'){
     document.addEventListener('DOMContentLoaded', function(){
-      document.getElementById('accessDenied').style.display = 'flex';
-      var elements = document.body.children;
-      for(var i = 0; i < elements.length; i++){
-        if(elements[i].id !== 'accessDenied'){
-          elements[i].style.display = 'none';
-        }
-      }
-    });
-  } else {
-    document.addEventListener('DOMContentLoaded', function(){
-      var denied = document.getElementById('accessDenied');
-      if(denied) denied.style.display = 'none';
+      document.getElementById('passwordScreen').style.display = 'none';
     });
   }
 })();
+
+function checkPwd(){
+  var PASSWORD = 'jgs2026';
+  var input = document.getElementById('pwdInput').value;
+  if(input === PASSWORD){
+    sessionStorage.setItem('jgs_cesiones_ok', 'granted');
+    document.getElementById('passwordScreen').style.display = 'none';
+  } else {
+    document.getElementById('pwdError').style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+  }
+}
 </script>
 
 <!-- UPLOAD -->
